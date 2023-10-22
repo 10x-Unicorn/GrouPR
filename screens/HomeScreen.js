@@ -5,6 +5,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Home Screen</Text>
+      <Text>GrouPR is an app focused around the gym community.</Text>
     </View>
   );
 };

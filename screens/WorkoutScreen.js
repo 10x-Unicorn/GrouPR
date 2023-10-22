@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState }from 'react';
+import { View, Text, StyleSheet, SafeAreaView,  Button, Modal, TouchableOpacity } from 'react-native';
 
-const HomeScreen = () => {
+const WorkoutScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
+      <Text style={styles.text}>Workout Screen</Text>
     </View>
   );
 };
@@ -21,4 +21,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default WorkoutScreen;
