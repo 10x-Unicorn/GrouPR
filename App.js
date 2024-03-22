@@ -44,7 +44,7 @@ export default function App() {
             }}
           />
           <Tab.Screen
-            name="Workout"
+            name="WorkoutStack"
             component={WorkoutStack}
             options={{
               headerShown: false,
