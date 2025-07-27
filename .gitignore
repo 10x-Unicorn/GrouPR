@@ -55,3 +55,6 @@ web-build/
 dist/
 
 .env
+.firebaserc
+firebase-debug.log
+database-debug.log

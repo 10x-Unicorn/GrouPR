@@ -22,7 +22,7 @@
     "expo-splash-screen": "~0.30.10",
     "expo-status-bar": "~2.2.3",
     "expo-updates": "~0.28.17",
-    "firebase": "^10.9.0",
+    "firebase": "^10.14.1",
     "metro": "^0.82.0",
     "nativewind": "^4.1.23",
     "postcss": "^8.5.6",
@@ -43,6 +43,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+    "firebase-tools": "^14.11.1",
     "tailwindcss": "^3.4.17"
   },
   "private": true

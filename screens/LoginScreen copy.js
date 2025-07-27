@@ -3,7 +3,6 @@ import { View, TextInput, Button, Text, StyleSheet, Switch } from 'react-native'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { Platform } from 'react-native';
-import Constants from 'expo-constants';
 
 // Emulator config (adjust port if needed)
 const emulatorConfig = {
@@ -27,8 +26,7 @@ function initializeFirebase(useProd) {
     if (!firebase.apps.length) {
         firebaseApp = firebase.initializeApp(useProd ? prodConfig : emulatorConfig);
         if (!useProd) {
-            console.log("IP addr" + Constants.expoConfig.extra.ipAddress);
-            const emulatorHost = Platform.OS === 'android' ? '10.0.2.2' : Constants.expoConfig.extra.ipAddress ;
+            const emulatorHost = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
             firebase.auth().useEmulator(`http://${emulatorHost}:9099/`);
         }
     }

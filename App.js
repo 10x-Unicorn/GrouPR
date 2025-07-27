@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, useColorScheme, TouchableOpacity, Modal, Button, ActionSheetIOS } from 'react-native';
-import { NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
@@ -8,13 +7,20 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import HomeScreen from './screens/HomeScreen.js';
 import AboutScreen from './screens/AboutScreen.js';
 import WorkoutStack from './components/WorkoutStack.js';
+import LoginScreen from './screens/LoginScreen.js'; // Import LoginScreen
 
-// Create the bottom tab navigator
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Pass a callback to LoginScreen to set login state
+  if (!isLoggedIn) {
+    return <LoginScreen onLoginSuccess={() => setIsLoggedIn(true)} />;
+  }
+
   return (
-    <ActionSheetProvider> 
+    <ActionSheetProvider>
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen
@@ -22,11 +28,7 @@ export default function App() {
             component={HomeScreen}
             options={{
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="home"
-                  color={color}
-                  size={size}
-                />
+                <MaterialCommunityIcons name="home" color={color} size={size} />
               ),
             }}
           />
@@ -35,11 +37,7 @@ export default function App() {
             component={AboutScreen}
             options={{
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="information"
-                  color={color}
-                  size={size}
-                />
+                <MaterialCommunityIcons name="information" color={color} size={size} />
               ),
             }}
           />
@@ -49,11 +47,7 @@ export default function App() {
             options={{
               headerShown: false,
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="dumbbell"
-                  color={color}
-                  size={size}
-                />
+                <MaterialCommunityIcons name="dumbbell" color={color} size={size} />
               ),
             }}
           />
