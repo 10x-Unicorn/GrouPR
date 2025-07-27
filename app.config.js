@@ -5,6 +5,10 @@ export default{
     "name": "GrouPR",
     "slug": "groupr",
     "version": "1.0.0",
+    // IDK if we need this, for web
+    "web": {
+      "bundler": "metro"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],

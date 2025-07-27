@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Switch } from 'react-native';
+import { View, TextInput, Pressable, Text } from 'react-native';
 import { account } from '../lib/appwrite';
 import { ID } from 'react-native-appwrite';
-
 
 export default function LoginScreenAppWrite({ onLoginSuccess }) {
     const [email, setEmail] = useState('');
@@ -33,60 +32,89 @@ export default function LoginScreenAppWrite({ onLoginSuccess }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Appwrite Login'}</Text>
+        <View className="flex-1 justify-center px-6 bg-white dark:bg-slate-900">
+            <Text className="text-3xl font-bold mb-8 text-center text-slate-800 dark:text-white">
+                {isSignUp ? 'Sign Up' : 'Appwrite Login'}
+            </Text>
+            
             <TextInput
-                style={styles.input}
+                className="border border-slate-300 dark:border-slate-600 mb-4 p-4 rounded-lg text-base bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                 placeholder="Email"
+                placeholderTextColor="#64748b"
                 autoCapitalize="none"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
             />
+            
             <TextInput
-                style={styles.input}
+                className="border border-slate-300 dark:border-slate-600 mb-4 p-4 rounded-lg text-base bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                 placeholder="Password"
+                placeholderTextColor="#64748b"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
             />
+            
             {isSignUp && (
                 <TextInput
-                    style={styles.input}
+                    className="border border-slate-300 dark:border-slate-600 mb-6 p-4 rounded-lg text-base bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
                     placeholder="Name"
+                    placeholderTextColor="#64748b"
                     value={name}
                     onChangeText={setName}
                 />
             )}
+            
             {isSignUp ? (
                 <>
-                    <Button title="Sign Up" onPress={handleSignUp} />
-                    <Text style={{ textAlign: 'center', marginTop: 12 }}>
+                    <Pressable 
+                        className="bg-blue-600 dark:bg-blue-500 py-4 rounded-lg mb-4 active:opacity-80"
+                        onPress={handleSignUp}
+                    >
+                        <Text className="text-white text-center text-lg font-semibold">
+                            Sign Up
+                        </Text>
+                    </Pressable>
+                    
+                    <Text className="text-center text-slate-600 dark:text-slate-300 mt-4">
                         Already have an account?{' '}
-                        <Text style={{ color: 'blue' }} onPress={() => setIsSignUp(false)}>
+                        <Text 
+                            className="text-blue-600 dark:text-blue-400 font-medium" 
+                            onPress={() => setIsSignUp(false)}
+                        >
                             Log In
                         </Text>
                     </Text>
                 </>
             ) : (
                 <>
-                    <Button title="Login" onPress={handleLogin} />
-                    <Text style={{ textAlign: 'center', marginTop: 12 }}>
+                    <Pressable 
+                        className="bg-blue-600 dark:bg-blue-500 py-4 rounded-lg mb-4 active:opacity-80"
+                        onPress={handleLogin}
+                    >
+                        <Text className="text-white text-center text-lg font-semibold">
+                            Login
+                        </Text>
+                    </Pressable>
+                    
+                    <Text className="text-center text-slate-600 dark:text-slate-300 mt-4">
                         Don't have an account?{' '}
-                        <Text style={{ color: 'blue' }} onPress={() => setIsSignUp(true)}>
+                        <Text 
+                            className="text-blue-600 dark:text-blue-400 font-medium" 
+                            onPress={() => setIsSignUp(true)}
+                        >
                             Sign Up
                         </Text>
                     </Text>
                 </>
             )}
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            
+            {error ? (
+                <Text className="text-red-500 dark:text-red-400 mt-4 text-center text-base">
+                    {error}
+                </Text>
+            ) : null}
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', padding: 24 },
-    title: { fontSize: 24, marginBottom: 24, textAlign: 'center' },
-    input: { borderWidth: 1, borderColor: '#ccc', marginBottom: 12, padding: 8, borderRadius: 4 },
-    error: { color: 'red', marginTop: 12, textAlign: 'center' },
-});
