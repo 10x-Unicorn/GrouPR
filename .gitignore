@@ -54,7 +54,14 @@ yarn-error.log
 web-build/
 dist/
 
-.env
+# Secrets
+# Ignore top-level .env file
+/.env
+# Do NOT ignore appwrite/.env don't put real secrets in this file
+# This file is used to configure Appwrite in development
+!appwrite/.env
+
+#fiebase
 .firebaserc
 firebase-debug.log
 database-debug.log

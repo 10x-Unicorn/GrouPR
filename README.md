@@ -6,7 +6,7 @@
 
 1. Download the Node.js installer suitable for your operating system (Windows, macOS, or Linux).
 
-1. Run the installer and follow the on-screen instructions to complete the installation. I have v22.17.1 installed (07/26/2025).
+1. Run the installer and follow the on-screen instructions to complete the installation. I have **v22.17.1** installed (07/26/2025).
 
 1. Once you have Node.js installed, npx will be available globally on your system. You can verify the installation by opening a terminal or command prompt and typing:
 ```bash
@@ -23,12 +23,52 @@ npm install
 npx expo start
 ```
 
+[Go to Database Setup](#Databases)
+
+
 Install the Expo Go app on your iOS or Android phone and connect to the same wireless network as your computer. On Android, use the Expo Go app to scan the QR code from your terminal to open your project. On iOS, use the built-in QR code scanner of the default iOS Camera app.
+
+## 🛢Databases
+Still contemplating what is the best to run Firebase vs. Appwrite
+
+## 🔥How to Set Up Firebase
+```bash
+firebase emulators:start
+```
+Set up right now to NOT keep any data around #TODO fix in future
+
+## 📝Appwrite 
+Download Docker on your system: https://www.docker.com/products/docker-desktop/
+```bash
+cd appwrite
+```
+
+Start the Appwrite stack using the following Docker command:
+### Start
+```bash
+docker compose up -d --remove-orphans
+```
+
+Once the Docker installation completes, go to your machine's hostname or IP address on your browser to access the Appwrite Console. Please note that on hosts that are not Linux-native, the server might take a few minutes to start after installation completes.
+
+### Stop
+You can stop your Appwrite containers by using the following command executed from the same directory as your docker-compose.yml file.
+
+```bash
+docker compose stop
+```
+
+### Uninstall
+To stop and remove your Appwrite containers, you can use the following command executed from the same directory as your docker-compose.yml file.
+
+```bash
+docker compose down -v
+```
 
 ## 📱How to Run an Android Emulator
 
 1. Install Android Studio: https://developer.android.com/studio
-2. I had java version: openjdk 17.0.16 2025-07-15 installed. Install link: https://adoptium.net/en-GB/temurin/releases/?version=17 android studio might install java for you.
+2. I had java version: openjdk **17.0.16 2025-07-15** installed. Install link: https://adoptium.net/en-GB/temurin/releases/?version=17 android studio might install java for you.
 3. Open Android Studio:
    - Go to Tools > Device Manager
    - Click “Create Device”

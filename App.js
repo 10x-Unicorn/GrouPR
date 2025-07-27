@@ -7,7 +7,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import HomeScreen from './screens/HomeScreen.js';
 import AboutScreen from './screens/AboutScreen.js';
 import WorkoutStack from './components/WorkoutStack.js';
-import LoginScreen from './screens/LoginScreen.js'; // Import LoginScreen
+import LoginScreen from './screens/LoginScreenAppWrite.js'; 
 
 const Tab = createBottomTabNavigator();
 
