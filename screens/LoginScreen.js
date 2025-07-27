@@ -13,7 +13,7 @@ const emulatorConfig = {
     appId: "demo-app-id",
 };
 
-// Prod config (leaving empty for now, fill with your actual Firebase config)
+// Prod config (leaving empty for now, on purpose so we don't accidentally use prod keys)
 const prodConfig = {
     apiKey: "YOUR_PROD_API_KEY",
     authDomain: "YOUR_PROD_AUTH_DOMAIN",
@@ -27,7 +27,6 @@ function initializeFirebase(useProd) {
     if (!firebase.apps.length) {
         firebaseApp = firebase.initializeApp(useProd ? prodConfig : emulatorConfig);
         if (!useProd) {
-            console.log("IP addr" + Constants.expoConfig.extra.ipAddress);
             const emulatorHost = Platform.OS === 'android' ? '10.0.2.2' : Constants.expoConfig.extra.ipAddress ;
             firebase.auth().useEmulator(`http://${emulatorHost}:9099/`);
         }
