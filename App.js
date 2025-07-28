@@ -7,6 +7,7 @@ import { View, Text, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import HomeScreen from './screens/HomeScreen.js';
+import ChatScreen from './screens/ChatScreen.js';
 import AboutScreen from './screens/AboutScreen.js';
 import WorkoutStack from './components/WorkoutStack.js';
 import LoginScreen from './screens/LoginScreenAppWrite.js';
@@ -103,6 +104,17 @@ function MainApp({ handleLogout }) {
         }}
       >
         {(props) => <HomeScreen {...props} />}
+      </Tab.Screen>
+      <Tab.Screen
+        name="Chat"
+        options={{
+          headerRight: () => <ProfileModal onLogout={handleLogout} />,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="chat" color={color} size={size} />
+          ),
+        }}
+      >
+        {(props) => <ChatScreen {...props} />}
       </Tab.Screen>
       <Tab.Screen
         name="About"

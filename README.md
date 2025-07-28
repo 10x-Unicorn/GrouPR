@@ -31,11 +31,6 @@ Install the Expo Go app on your iOS or Android phone and connect to the same wir
 ## 🛢Databases
 Still contemplating what is the best to run Firebase vs. Appwrite
 
-## 🔥How to Set Up Firebase
-```bash
-firebase emulators:start
-```
-Set up right now to NOT keep any data around #TODO fix in future
 
 ## 📝Appwrite 
 Download Docker on your system: https://www.docker.com/products/docker-desktop/
@@ -51,6 +46,17 @@ docker compose up -d --remove-orphans
 
 Once the Docker installation completes, go to your machine's hostname or IP address on your browser to access the Appwrite Console. Please note that on hosts that are not Linux-native, the server might take a few minutes to start after installation completes.
 
+## DB One Time Setup
+Make sure you go the UI setup first to make a login at: localhost 
+
+Install the appwrite-cli globally, ensure it is installed correctly, login, and push out my config
+```bash
+npm install -g appwrite-cli
+appwrite -v
+appwrite login --endpoint http://localhost/v1
+appwrite push all
+```
+
 ### Stop
 You can stop your Appwrite containers by using the following command executed from the same directory as your docker-compose.yml file.
 
@@ -65,13 +71,19 @@ To stop and remove your Appwrite containers, you can use the following command e
 docker compose down -v
 ```
 
+## 🔥How to Set Up Firebase (Depreciated) 
+```bash
+firebase emulators:start
+```
+Set up right now to NOT keep any data around #TODO fix in future
+
 ## 📱How to Run an Android Emulator
 
 1. Install Android Studio: https://developer.android.com/studio
 2. I had java version: openjdk **17.0.16 2025-07-15** installed. Install link: https://adoptium.net/en-GB/temurin/releases/?version=17 android studio might install java for you.
 3. Open Android Studio:
-   - Go to Tools > Device Manager
-   - Click “Create Device”
+   - Go to More Actions > Virtual Device Manager
+   - Click “Create Virtual Device”
    - Choose a device type
-   - Select a system image (pick one with “Play Store” if possible)
+   - Select a system image (pick one with “Play Store” if possible I am using Medium Phone API 36.0)
    - Finish setup.  
