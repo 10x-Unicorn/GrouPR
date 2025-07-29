@@ -54,8 +54,10 @@ Install the appwrite-cli globally, ensure it is installed correctly, login, and 
 npm install -g appwrite-cli
 appwrite -v
 appwrite login --endpoint http://localhost/v1
-appwrite push all
+appwrite run??? (or sub the projectId it gives you)
+./appwrite-run.sh push all
 ```
+./appwrite-run.sh command (use from now on)
 
 ### Stop
 You can stop your Appwrite containers by using the following command executed from the same directory as your docker-compose.yml file.

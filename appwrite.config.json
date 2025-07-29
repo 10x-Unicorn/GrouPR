@@ -1,5 +1,5 @@
 {
-    "projectId": "6885b2e7003c019ed4fd",
+    "projectId": "${APPWRITE_PROJECT_ID}",
     "projectName": "GrouPR",
     "settings": {
         "services": {
