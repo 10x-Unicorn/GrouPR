@@ -10,7 +10,7 @@ import HomeScreen from './screens/HomeScreen.js';
 import ChatScreen from './screens/ChatScreen.js';
 import AboutScreen from './screens/AboutScreen.js';
 import WorkoutStack from './components/WorkoutStack.js';
-import LoginScreen from './screens/LoginScreenAppWrite.js';
+import LoginScreen from './screens/LoginScreen.js';
 import ProfileButton from './components/ProfileButton.js';
 import { account } from './lib/appwrite';
  
