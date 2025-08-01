@@ -64,6 +64,7 @@ services:
     depends_on:
       - mariadb
       - redis
+      - mailhog
 #      - clamav
     environment:
       - _APP_ENV
@@ -167,6 +168,12 @@ services:
       - _APP_MIGRATIONS_FIREBASE_CLIENT_ID
       - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
       - _APP_ASSISTANT_OPENAI_API_KEY
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025"  # SMTP port
+      - "8025:8025"  # Web interface
   appwrite-console:
     <<: *x-logging
     container_name: appwrite-console

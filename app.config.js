@@ -5,6 +5,7 @@ export default{
     "name": "GrouPR",
     "slug": "groupr",
     "version": "1.0.0",
+    "scheme": "groupr",
     // IDK if we need this, for web
     "web": {
       "bundler": "metro"
@@ -12,6 +13,29 @@ export default{
     "assetBundlePatterns": [
       "**/*"
     ],
+     "ios": {
+      "bundleIdentifier": "com.10xu.groupr",
+      "associatedDomains": ["applinks:groupr.com"] // Optional: for universal links
+    },
+    "android": {
+      "package": "com.10xu.groupr",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "groupr.com"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
+    },
     "extra": {
       "eas": {
         "projectId": "75dec1dd-3a52-4a86-b0fd-04625d10fc13"
