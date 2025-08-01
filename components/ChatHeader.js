@@ -5,7 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 export default function ChatHeader({ team, teamMembers, onBack, onSettings, theme }) {
   return (
     <View style={{
-      backgroundColor: theme.cardBackground,
+      backgroundColor: theme.backgroundColor,
       paddingHorizontal: 16,
       paddingBottom: 12,
       borderBottomColor: theme.border,

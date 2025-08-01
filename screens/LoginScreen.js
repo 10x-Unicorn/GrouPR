@@ -3,7 +3,7 @@ import { View, TextInput, Pressable, Text } from 'react-native';
 import { account } from '../lib/appwrite';
 import { ID } from 'react-native-appwrite';
 
-export default function LoginScreenAppWrite({ onLoginSuccess }) {
+export default function LoginScreen({ onLoginSuccess }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');

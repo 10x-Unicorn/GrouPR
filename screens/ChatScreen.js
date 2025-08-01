@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  FlatList, 
-  KeyboardAvoidingView, 
-  Platform, 
+import {
+  View,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
   useColorScheme,
-  SafeAreaView
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import useChat from '../hooks/useChat';
 import ChatHeader from '../components/ChatHeader';
 import ChatMessage from '../components/ChatMessage';
@@ -57,8 +57,8 @@ export default function ChatScreen({ route, navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
-      <SafeAreaView style={{ backgroundColor: theme.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={{ flex: 1, backgroundColor: theme.background }}>
         <ChatHeader
           team={team}
           teamMembers={teamMembers}
@@ -66,55 +66,53 @@ export default function ChatScreen({ route, navigation }) {
           onSettings={openTeamSettings}
           theme={theme}
         />
-      </SafeAreaView>
-      
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-      >
 
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          renderItem={({ item, index }) => (
-            <ChatMessage
-              item={item}
-              index={index}
-              messages={messages}
-              currentUser={currentUser}
-              theme={theme}
-              getDisplayName={getUserDisplayName}
-            />
-          )}
-          keyExtractor={(item) => item.$id}
+        <KeyboardAvoidingView
           style={{ flex: 1 }}
-          contentContainerStyle={{ 
-            padding: 16,
-            flexGrow: 1,
-            justifyContent: 'flex-xstart',
-          }}
-          onContentSizeChange={() => {
-            setTimeout(() => {
-              flatListRef.current?.scrollToEnd({ animated: true });
-            }, 100);
-          }}
-          showsVerticalScrollIndicator={false}
-          // This helps prevent jumping
-          removeClippedSubviews={false}
-          windowSize={50}
-          maxToRenderPerBatch={10}
-          updateCellsBatchingPeriod={50}
-          initialNumToRender={20}
-        />
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        >
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            renderItem={({ item, index }) => (
+              <ChatMessage
+                item={item}
+                index={index}
+                messages={messages}
+                currentUser={currentUser}
+                theme={theme}
+                getDisplayName={getUserDisplayName}
+              />
+            )}
+            keyExtractor={(item) => item.$id}
+            style={{ flex: 1 }}
+            contentContainerStyle={{
+              padding: 16,
+              flexGrow: 1,
+              justifyContent: 'flex-start'
+            }}
+            onContentSizeChange={() => {
+              setTimeout(() => {
+                flatListRef.current?.scrollToEnd({ animated: true });
+              }, 100);
+            }}
+            showsVerticalScrollIndicator={false}
+            removeClippedSubviews={false}
+            windowSize={50}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={50}
+            initialNumToRender={20}
+          />
 
-        <MessageInput
-          value={newMessage}
-          onChange={setNewMessage}
-          onSend={handleSend}
-          theme={theme}
-        />
-      </KeyboardAvoidingView>
-    </View>
+          <MessageInput
+            value={newMessage}
+            onChange={setNewMessage}
+            onSend={handleSend}
+            theme={theme}
+          />
+        </KeyboardAvoidingView>
+      </View>
+    </SafeAreaView>
   );
 }
