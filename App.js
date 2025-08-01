@@ -6,18 +6,22 @@ import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-s
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { cssInterop } from 'nativewind';
+import { navigationRef } from './navigation/navigationRef';
 
+import AcceptInviteScreen from './screens/AcceptInviteScreen';
 import HomeScreen from './screens/HomeScreen';
-import ChatScreen from './screens/ChatScreen';
 import AboutScreen from './screens/AboutScreen';
 import WorkoutStack from './components/WorkoutStack';
 import LoginScreen from './screens/LoginScreen';
 import ProfileButton from './components/ProfileButton';
 import { account } from './lib/appwrite';
-
-import './global.css';
-
+import GroupsStack from './components/GroupsStack'; 
 const Tab = createBottomTabNavigator();
+import { Linking } from 'react-native';
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+const Stack = createNativeStackNavigator();
+import './global.css';
 
 // Custom Navigation Themes using NativeWind colors
 const LightNavigationTheme = {
@@ -48,18 +52,26 @@ const DarkNavigationTheme = {
 
 function CustomTabBar({ state, descriptors, navigation }) {
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
   return (
     <View
-      className="flex-row bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700"
+      className={`flex-row border-t ${isDark ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200'}`}
       style={{ paddingBottom: insets.bottom, height: 60 + insets.bottom }}
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
 
+        // Dynamic colors based on dark mode
+        const activeColor = isDark ? '#38bdf8' : '#3b82f6'; // sky-400 or blue-600
+        const inactiveColor = isDark ? '#94a3b8' : '#64748b'; // slate-400 or slate-500
+        const labelActive = isDark ? 'text-sky-400' : 'text-blue-600';
+        const labelInactive = isDark ? 'text-slate-400' : 'text-slate-500';
+
         const icon = options.tabBarIcon?.({
-          color: isFocused ? '#3b82f6' : '#64748b', // We'll handle dark mode colors with CSS
+          color: isFocused ? activeColor : inactiveColor,
           size: 24,
         });
 
@@ -77,25 +89,13 @@ function CustomTabBar({ state, descriptors, navigation }) {
         return (
           <TouchableOpacity
             key={route.key}
-            className={`flex-1 items-center justify-center py-2 ${
-              isFocused 
-                ? 'bg-blue-50 dark:bg-slate-800' 
-                : 'bg-transparent'
-            }`}
+            className="flex-1 items-center justify-center py-2"
             onPress={onPress}
           >
-            <View className={`p-1 rounded-lg ${
-              isFocused 
-                ? 'bg-blue-100 dark:bg-sky-900/50' 
-                : 'bg-transparent'
-            }`}>
+            <View className="p-1">
               {icon}
             </View>
-            <Text className={`text-xs mt-1 font-medium ${
-              isFocused 
-                ? 'text-blue-600 dark:text-sky-400'
-                : 'text-slate-500 dark:text-slate-400'
-            }`}>
+            <Text className={`text-xs mt-1 font-medium ${isFocused ? labelActive : labelInactive}`}>
               {route.name}
             </Text>
           </TouchableOpacity>
@@ -153,7 +153,7 @@ function ProfileModal({ onLogout }) {
   );
 }
 
-function MainApp({ onLogout }) {
+function MainTabNavigator({ onLogout }) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
@@ -161,7 +161,6 @@ function MainApp({ onLogout }) {
     <Tab.Navigator
       screenOptions={{
         headerRight: () => <ProfileModal onLogout={onLogout} />,
-        // Use NativeWind colors but apply them through JS since React Navigation doesn't support className
         headerStyle: { 
           backgroundColor: isDark ? '#0f172a' : '#ffffff',
           borderBottomWidth: 1,
@@ -188,12 +187,13 @@ function MainApp({ onLogout }) {
         }}
       />
       <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
+        name="Groups"
+        component={GroupsStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="chat" color={color} size={size} />
+            <MaterialCommunityIcons name="account-group" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -219,24 +219,120 @@ function MainApp({ onLogout }) {
   );
 }
 
-export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [checking, setChecking] = useState(true);
+function MainApp({ onLogout }) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
+  return (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="MainTabs" 
+        options={{ headerShown: false }}
+      >
+        {(props) => <MainTabNavigator {...props} onLogout={onLogout} />}
+      </Stack.Screen>
+      <Stack.Screen 
+        name="AcceptInvite" 
+        component={AcceptInviteScreen}
+        options={{
+          title: 'Team Invitation',
+          headerStyle: { 
+            backgroundColor: isDark ? '#0f172a' : '#ffffff',
+          },
+          headerTitleStyle: { 
+            color: isDark ? '#f1f5f9' : '#1e293b',
+          },
+          headerTintColor: isDark ? '#f1f5f9' : '#1e293b',
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Helper function to parse URL parameters
+function parseInviteUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    const params = {};
+    
+    // Extract query parameters
+    urlObj.searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+    
+    return params;
+  } catch (error) {
+    console.error('Error parsing URL:', error);
+    return null;
+  }
+}
+
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const [pendingInvite, setPendingInvite] = useState(null);
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  // Handle deep linking
+  const handleDeepLink = (url) => {
+    console.log('Handling deep link:', url);
+    
+    if (url && url.includes('/accept-invite')) {
+      const inviteParams = parseInviteUrl(url);
+      
+      if (inviteParams && navigationRef.isReady()) {
+        // If user is logged in, navigate immediately
+        if (isLoggedIn) {
+          navigationRef.navigate('AcceptInvite', inviteParams);
+        } else {
+          // Store invite to handle after login
+          setPendingInvite(inviteParams);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
+    // Check authentication status
     account
       .get()
       .then(() => setIsLoggedIn(true))
       .catch(() => setIsLoggedIn(false))
       .finally(() => setChecking(false));
+
+    // Listen for incoming links when app is already running
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      handleDeepLink(url);
+    });
+
+    // Handle link that opened the app (cold start)
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink(url);
+      }
+    });
+
+    return () => subscription?.remove();
   }, []);
 
+  // Handle pending invite after login
+  useEffect(() => {
+    if (isLoggedIn && pendingInvite && navigationRef.isReady()) {
+      // Small delay to ensure navigation is fully ready
+      setTimeout(() => {
+        navigationRef.navigate('AcceptInvite', pendingInvite);
+        setPendingInvite(null);
+      }, 100);
+    }
+  }, [isLoggedIn, pendingInvite]);
+
   const handleLoginSuccess = () => setIsLoggedIn(true);
+  
   const handleLogout = async () => {
     await account.deleteSession('current');
     setIsLoggedIn(false);
+    setPendingInvite(null); // Clear any pending invites
   };
 
   if (checking) {
@@ -274,6 +370,24 @@ export default function App() {
     );
   }
 
+  // Configure linking for React Navigation
+  const linking = {
+    prefixes: ['http://192.168.1.167:8081', 'https://yourapp.com'], // Add your actual domain
+    config: {
+      screens: {
+        MainTabs: {
+          screens: {
+            Home: 'home',
+            Groups: 'groups',
+            About: 'about',
+            Workout: 'workout',
+          },
+        },
+        AcceptInvite: 'accept-invite',
+      },
+    },
+  };
+
   return (
     <>
       <StatusBar 
@@ -281,7 +395,11 @@ export default function App() {
         backgroundColor={isDark ? '#0f172a' : '#ffffff'} 
       />
       <ActionSheetProvider>
-        <NavigationContainer theme={isDark ? DarkNavigationTheme : LightNavigationTheme}>
+        <NavigationContainer  
+          ref={navigationRef} 
+          theme={isDark ? DarkNavigationTheme : LightNavigationTheme}
+          linking={linking}
+        >
           {isLoggedIn ? (
             <MainApp onLogout={handleLogout} />
           ) : (
