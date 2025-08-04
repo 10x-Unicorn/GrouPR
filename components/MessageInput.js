@@ -29,7 +29,6 @@ export default function MessageInput({ value, onChange, onSend, theme }) {
         value={value}
         onChangeText={onChange}
         multiline
-        returnKeyType="send"
         onSubmitEditing={onSend}
         blurOnSubmit={false}
       />

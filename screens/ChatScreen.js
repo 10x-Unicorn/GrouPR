@@ -57,8 +57,11 @@ export default function ChatScreen({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-      <View style={{ flex: 1, backgroundColor: theme.background }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: theme.background }}
+        edges={['top', 'left', 'right']} // Don't add bottom safe area
+      >
         <ChatHeader
           team={team}
           teamMembers={teamMembers}
@@ -112,7 +115,7 @@ export default function ChatScreen({ route, navigation }) {
             theme={theme}
           />
         </KeyboardAvoidingView>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 }
