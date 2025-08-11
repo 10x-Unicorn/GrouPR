@@ -1,41 +1,26 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import WorkoutActionSheet from './WorkoutActionSheet.js';
-import XBackButton from './XBackButton.js';
-import WorkoutScreen from '../screens/WorkoutScreen.js';
-import NewWorkoutScreen from '../screens/NewWorkoutScreen.js';
-import ExercisesScreen from '../screens/ExercisesScreen.js';
-import NewExercise from '../screens/NewExerciseScreen.js';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import WorkoutTabsScreen from '../screens/WorkoutTabsScreen';
+import CreateWorkoutPlanScreen from '../screens/CreateWorkoutPlanScreen';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
+
 const WorkoutStack = () => {
     return (
-        <Stack.Navigator>
-            <Stack.Screen name="Workout" 
-            component={WorkoutScreen} 
-            options={{
-            title: "Workouts",
-            headerRight: ({ color }) => (
-                <WorkoutActionSheet/>
-            ),
-            }}
-            />
-            <Stack.Screen name="NewWorkout" 
-            component={NewWorkoutScreen}
-            options={{
-            title: "New Workout",
-            }}
-            />
-            <Stack.Screen name="Exercises" 
-            component={ExercisesScreen}
-            options={{
-            title: "Exercises",
-            headerLeft: () => (
-                <XBackButton/>
-            ),
-            }}
-            />
-        </Stack.Navigator>
+            <Stack.Navigator>
+                <Stack.Screen name="Workout" 
+                component={WorkoutTabsScreen} 
+                options={{
+                title: "Workouts",
+                }}
+                />
+                <Stack.Screen name="CreateWorkoutPlan" 
+                component={CreateWorkoutPlanScreen} 
+                options={{
+                title: "Create Workout Plan",
+                }}
+                />
+            </Stack.Navigator>
         );
 }
 
