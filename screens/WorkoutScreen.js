@@ -70,7 +70,7 @@ const CustomTopTabBar = ({ tabs, activeTab, onTabChange, theme }) => {
   );
 };
 
-const WorkoutTabsScreen = ({ navigation }) => {
+const WorkoutScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState(TAB_TYPES.PLANS);
   const [isSwipeActive, setIsSwipeActive] = useState(false);
   const theme = useTheme();
@@ -100,13 +100,9 @@ const WorkoutTabsScreen = ({ navigation }) => {
       const { dx } = gestureState;
       const swipeThreshold = 30;
       
-      console.log('Current activeTab at swipe:', activeTab);
-      console.log('Swipe distance:', dx);
-      
       if (Math.abs(dx) > swipeThreshold) {
         if (dx > 0) {
           // Swipe right - go to Plans (left tab)
-          console.log('Swiping right to Plans from:', activeTab);
           if (activeTab === TAB_TYPES.INDIVIDUAL) {
             handleTabChange(TAB_TYPES.PLANS);
           } else {
@@ -133,7 +129,6 @@ const WorkoutTabsScreen = ({ navigation }) => {
 
   const renderActiveTab = () => {
     const commonProps = { navigation };
-
     switch (activeTab) {
       case TAB_TYPES.PLANS:
         return <WorkoutPlansTab key="plans-tab" {...commonProps} />;
@@ -164,4 +159,4 @@ const WorkoutTabsScreen = ({ navigation }) => {
   );
 };
 
-export default WorkoutTabsScreen;
+export default WorkoutScreen;

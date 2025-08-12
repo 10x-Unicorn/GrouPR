@@ -80,7 +80,9 @@ screens/
 
 ### Styling Approach
 - **NativeWind**: Tailwind classes directly in JSX (`className` prop)
-- **Theme Colors**: Consistent color scheme (blue/sky for light/dark modes)
+- **Theme System**: Use `lib/theme.js` for all color definitions - this file contains the complete color palette for both light and dark modes
+- **Color Usage**: Always use colors from `lib/theme.js` instead of hardcoded hex values - import and use the colors object for consistency
+- **Theme Hook**: Use the `useTheme()` hook to access current theme colors in components
 - **Safe Areas**: React Native Safe Area Context for proper spacing
 - **Custom Themes**: Navigation themes that adapt to system dark mode
 
@@ -108,6 +110,42 @@ The app supports deep linking for team invitations:
 - **Service Singletons**: chatService and teamService maintain state
 - **Real-time Subscriptions**: Automatic cleanup on component unmount
 - **User Session**: Global authentication state with session checking
+
+## Theme System
+
+### Color Management
+- **Central Theme File**: All colors are defined in `lib/theme.js` with complete light/dark mode support
+- **Consistent Palette**: Use the predefined color scales (primary, gray, background, text, etc.) instead of custom colors
+- **Theme Hook**: Import `useTheme()` from `hooks/useTheme` to access current theme colors in components
+- **Color Categories**:
+  - Primary: brand colors (blue/sky)
+  - Background: surface and background colors
+  - Text: text hierarchy colors
+  - Gray scale: utility colors
+  - Status: success, warning, error, info colors
+  - Border: consistent border colors
+
+### Usage Examples
+```javascript
+import { useTheme } from '../hooks/useTheme';
+
+const MyComponent = () => {
+  const theme = useTheme();
+  
+  return (
+    <View style={{ backgroundColor: theme.colors.background }}>
+      <Text style={{ color: theme.colors.text }}>Primary text</Text>
+      <Text style={{ color: theme.colors.textSecondary }}>Secondary text</Text>
+    </View>
+  );
+};
+```
+
+### Important Rules
+- NEVER use hardcoded hex colors like '#3b82f6' - use `theme.colors.primary` instead
+- ALWAYS import colors from `lib/theme.js` when defining navigation themes
+- USE the theme hook in all components that need colors
+- MAINTAIN color consistency across light and dark modes
 
 ## Development Notes
 - **Platform Differences**: Android emulator uses different IP (10.0.2.2) than iOS

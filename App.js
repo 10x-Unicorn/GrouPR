@@ -15,7 +15,9 @@ import WorkoutStack from './components/WorkoutStack';
 import LoginScreen from './screens/LoginScreen';
 import ProfileButton from './components/ProfileButton';
 import { account } from './lib/appwrite';
-import GroupsStack from './components/GroupsStack'; 
+import GroupsStack from './components/GroupsStack';
+import { colors } from './lib/theme'; 
+import { useTheme } from './hooks/useTheme';
 const Tab = createBottomTabNavigator();
 import { Linking } from 'react-native';
 
@@ -23,17 +25,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 import './global.css';
 
-// Custom Navigation Themes using NativeWind colors
+// Custom Navigation Themes using theme colors
 const LightNavigationTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#3b82f6', // blue-500
-    background: '#ffffff', // white
-    card: '#ffffff', // white
-    text: '#1e293b', // slate-800
-    border: '#e2e8f0', // slate-200
-    notification: '#ef4444', // red-500
+    primary: colors.light.primary,
+    background: colors.light.background,
+    card: colors.light.surface,
+    text: colors.light.text,
+    border: colors.light.border,
+    notification: colors.light.error,
   },
 };
 
@@ -41,34 +43,37 @@ const DarkNavigationTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
-    primary: '#38bdf8', // sky-400
-    background: '#0f172a', // slate-900
-    card: '#1e293b', // slate-800
-    text: '#f1f5f9', // slate-100
-    border: '#334155', // slate-700
-    notification: '#ef4444', // red-500
+    primary: colors.dark.primary,
+    background: colors.dark.background,
+    card: colors.dark.surface,
+    text: colors.dark.text,
+    border: colors.dark.border,
+    notification: colors.dark.error,
   },
 };
 
 function CustomTabBar({ state, descriptors, navigation }) {
   const insets = useSafeAreaInsets();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const theme = useTheme();
 
   return (
     <View
-      className={`flex-row border-t ${isDark ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200'}`}
-      style={{ paddingBottom: insets.bottom, height: 60 + insets.bottom }}
+      style={{ 
+        paddingBottom: insets.bottom, 
+        height: 60 + insets.bottom,
+        backgroundColor: theme.colors.background,
+        borderTopWidth: 1,
+        borderTopColor: theme.colors.border,
+        flexDirection: 'row'
+      }}
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
 
-        // Dynamic colors based on dark mode
-        const activeColor = isDark ? '#38bdf8' : '#3b82f6'; // sky-400 or blue-600
-        const inactiveColor = isDark ? '#94a3b8' : '#64748b'; // slate-400 or slate-500
-        const labelActive = isDark ? 'text-sky-400' : 'text-blue-600';
-        const labelInactive = isDark ? 'text-slate-400' : 'text-slate-500';
+        // Dynamic colors based on theme
+        const activeColor = theme.colors.primary;
+        const inactiveColor = theme.colors.textSecondary;
 
         const icon = options.tabBarIcon?.({
           color: isFocused ? activeColor : inactiveColor,
@@ -95,7 +100,10 @@ function CustomTabBar({ state, descriptors, navigation }) {
             <View className="p-1">
               {icon}
             </View>
-            <Text className={`text-xs mt-1 font-medium ${isFocused ? labelActive : labelInactive}`}>
+            <Text 
+              className="text-xs mt-1 font-medium"
+              style={{ color: isFocused ? activeColor : inactiveColor }}
+            >
               {route.name}
             </Text>
           </TouchableOpacity>
@@ -108,10 +116,26 @@ function CustomTabBar({ state, descriptors, navigation }) {
 // Apply NativeWind to custom components
 cssInterop(CustomTabBar, { className: 'style' });
 
+// Helper function to generate consistent screen options
+function getScreenOptions(title, isDark) {
+  const theme = isDark ? colors.dark : colors.light;
+  
+  return {
+    title,
+    headerStyle: { 
+      backgroundColor: theme.background,
+    },
+    headerTitleStyle: { 
+      color: theme.text,
+    },
+    headerTintColor: theme.text,
+  };
+}
+
 function ProfileModal({ onLogout }) {
   const { showActionSheetWithOptions } = useActionSheet();
   const [userInfo, setUserInfo] = useState(null);
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
 
   useEffect(() => {
     account.get().then(setUserInfo).catch(console.error);
@@ -127,13 +151,13 @@ function ProfileModal({ onLogout }) {
         title: userInfo?.name ?? 'Profile',
         // Style the action sheet based on theme
         containerStyle: {
-          backgroundColor: colorScheme === 'dark' ? '#1e293b' : '#ffffff',
+          backgroundColor: theme.colors.backgroundSecondary,
         },
         textStyle: {
-          color: colorScheme === 'dark' ? '#f1f5f9' : '#1e293b',
+          color: theme.colors.text,
         },
         titleTextStyle: {
-          color: colorScheme === 'dark' ? '#cbd5e1' : '#64748b',
+          color: theme.colors.textSecondary,
         },
       },
       (index) => {
@@ -154,26 +178,25 @@ function ProfileModal({ onLogout }) {
 }
 
 function MainTabNavigator({ onLogout }) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const theme = useTheme();
 
   return (
     <Tab.Navigator
       screenOptions={{
         headerRight: () => <ProfileModal onLogout={onLogout} />,
         headerStyle: { 
-          backgroundColor: isDark ? '#0f172a' : '#ffffff',
+          backgroundColor: theme.colors.background,
           borderBottomWidth: 1,
-          borderBottomColor: isDark ? '#334155' : '#e2e8f0',
+          borderBottomColor: theme.colors.border,
           elevation: 0,
           shadowOpacity: 0,
         },
         headerTitleStyle: { 
-          color: isDark ? '#f1f5f9' : '#1e293b',
+          color: theme.colors.text,
           fontSize: 18,
           fontWeight: '600',
         },
-        headerTintColor: isDark ? '#f1f5f9' : '#1e293b',
+        headerTintColor: theme.colors.text,
       }}
       tabBar={(props) => <CustomTabBar {...props} />}
     >
@@ -206,13 +229,13 @@ function MainTabNavigator({ onLogout }) {
         }}
       />
       <Tab.Screen
-        name="Workout"
+        name="Workouts"
         component={WorkoutStack}
         options={{
-          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="dumbbell" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
@@ -220,8 +243,7 @@ function MainTabNavigator({ onLogout }) {
 }
 
 function MainApp({ onLogout }) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const theme = useTheme();
 
   return (
     <Stack.Navigator>
@@ -234,16 +256,7 @@ function MainApp({ onLogout }) {
       <Stack.Screen 
         name="AcceptInvite" 
         component={AcceptInviteScreen}
-        options={{
-          title: 'Team Invitation',
-          headerStyle: { 
-            backgroundColor: isDark ? '#0f172a' : '#ffffff',
-          },
-          headerTitleStyle: { 
-            color: isDark ? '#f1f5f9' : '#1e293b',
-          },
-          headerTintColor: isDark ? '#f1f5f9' : '#1e293b',
-        }}
+        options={getScreenOptions('Team Invitation', theme.isDark)}
       />
     </Stack.Navigator>
   );
@@ -271,8 +284,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [checking, setChecking] = useState(true);
   const [pendingInvite, setPendingInvite] = useState(null);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const theme = useTheme();
 
   // Handle deep linking
   const handleDeepLink = (url) => {
@@ -339,30 +351,51 @@ export default function App() {
     return (
       <>
         <StatusBar 
-          barStyle={isDark ? 'light-content' : 'dark-content'} 
-          backgroundColor={isDark ? '#0f172a' : '#ffffff'} 
+          barStyle={theme.isDark ? 'light-content' : 'dark-content'} 
+          backgroundColor={theme.colors.background} 
         />
-        <View className="flex-1 justify-center items-center bg-white dark:bg-slate-900">
+        <View 
+          className="flex-1 justify-center items-center" 
+          style={{ backgroundColor: theme.colors.background }}
+        >
           <View className="items-center">
-            <View className="w-20 h-20 bg-blue-500 dark:bg-sky-400 rounded-full items-center justify-center mb-6 shadow-lg">
+            <View 
+              className="w-20 h-20 rounded-full items-center justify-center mb-6 shadow-lg"
+              style={{ backgroundColor: theme.colors.primary }}
+            >
               <MaterialCommunityIcons 
                 name="dumbbell" 
                 color="white" 
                 size={36} 
               />
             </View>
-            <Text className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">
+            <Text 
+              className="text-2xl font-bold mb-2"
+              style={{ color: theme.colors.text }}
+            >
               Checking session...
             </Text>
-            <Text className="text-base text-slate-500 dark:text-slate-400 text-center px-8">
+            <Text 
+              className="text-base text-center px-8"
+              style={{ color: theme.colors.textSecondary }}
+            >
               Getting things ready for you
             </Text>
             
             {/* Loading indicator */}
             <View className="flex-row space-x-1 mt-6">
-              <View className="w-2 h-2 bg-blue-500 dark:bg-sky-400 rounded-full animate-pulse" />
-              <View className="w-2 h-2 bg-blue-500 dark:bg-sky-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
-              <View className="w-2 h-2 bg-blue-500 dark:bg-sky-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
+              <View 
+                className="w-2 h-2 rounded-full animate-pulse" 
+                style={{ backgroundColor: theme.colors.primary }}
+              />
+              <View 
+                className="w-2 h-2 rounded-full animate-pulse" 
+                style={{ backgroundColor: theme.colors.primary, animationDelay: '0.2s' }}
+              />
+              <View 
+                className="w-2 h-2 rounded-full animate-pulse" 
+                style={{ backgroundColor: theme.colors.primary, animationDelay: '0.4s' }}
+              />
             </View>
           </View>
         </View>
@@ -391,13 +424,13 @@ export default function App() {
   return (
     <>
       <StatusBar 
-        barStyle={isDark ? 'light-content' : 'dark-content'} 
-        backgroundColor={isDark ? '#0f172a' : '#ffffff'} 
+        barStyle={theme.isDark ? 'light-content' : 'dark-content'} 
+        backgroundColor={theme.colors.background} 
       />
       <ActionSheetProvider>
         <NavigationContainer  
           ref={navigationRef} 
-          theme={isDark ? DarkNavigationTheme : LightNavigationTheme}
+          theme={theme.isDark ? DarkNavigationTheme : LightNavigationTheme}
           linking={linking}
         >
           {isLoggedIn ? (

@@ -15,7 +15,7 @@ const IndividualWorkoutsTab = ({ navigation }) => {
             backgroundColor: theme.colors.backgroundSecondary,
             borderColor: theme.colors.border
           }}
-          onPress={() => navigation.navigate('CreateWorkoutPlan')}
+          onPress={() => navigation.navigate('CreateIndividualWorkout')}
         >
           <View className="flex-row items-center">
             <MaterialCommunityIcons name="dumbbell" size={28} color={theme.getIconColor()} />
